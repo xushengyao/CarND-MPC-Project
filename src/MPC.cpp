@@ -19,6 +19,7 @@ double dt = 0.05;
 // presented in the classroom matched the previous radius.
 //
 // This is the length from front to CoG that has a similar radius.
+double ref_v = 70;
 const double Lf = 2.67;
 size_t x_start = 0;
 size_t y_start = x_start + N;
@@ -52,13 +53,13 @@ class FG_eval {
     }
 
     // Minimize the use of actuators.
-    for (int i = 0; t < N - 1; t++){
+    for (int t = 0; t < N - 1; t++){
       fg[0] += CppAD::pow(vars[delta_start + t], 2);
       fg[0] += CppAD::pow(vars[a_start + t], 2);
     }
 
     // Minimize the value gap between sequential actuatotions.
-    for (int i = 0l t < N -2; t++){
+    for (int t = 0; t < N -2; t++){
       fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       fg[0] += CppAD::pow(vars[a_start + t +1] - vars[a_start + t], 2);
     }
@@ -139,7 +140,6 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   double v = x0[3];
   double cte = x0[4];
   double epsi = x0[5];
-  size_t n_vars = 0;
   // TODO: Set the number of model variables (includes both states and inputs).
   // For example: If the state is a 4 element vector, the actuators is a 2
   // element vector and there are 10 timesteps. The number of variables is:
