@@ -119,7 +119,7 @@ int main() {
           auto coeffs = polyfit(waypoints_x_eig, waypoints_y_eig, 3);
           double cte = polyeval(coeffs, 0);  // px = 0, py = 0
           double epsi = -atan(coeffs[1]);  //
-          
+
           double steer_value;
           double throttle_value;
 
@@ -132,7 +132,7 @@ int main() {
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = steer_value;
+          msgJson["steering_angle"] = steer_value/(deg2rad(25));
           msgJson["throttle"] = throttle_value;
 
           //Display the MPC predicted trajectory
