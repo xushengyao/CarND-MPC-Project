@@ -6,7 +6,7 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-size_t N = 25;
+size_t N = 15;
 double dt = 0.1;
 
 // This value assumes the model presented in the classroom is used.
@@ -19,7 +19,7 @@ double dt = 0.1;
 // presented in the classroom matched the previous radius.
 //
 // This is the length from front to CoG that has a similar radius.
-double ref_v = 80;
+double ref_v = 45;
 const double Lf = 2.67;
 size_t x_start = 0;
 size_t y_start = x_start + N;
@@ -47,29 +47,21 @@ class FG_eval {
 
     // The part of the cost based on the reference state.
     for (int t = 0; t < N; t++) {
-      // fg[0] += CppAD::pow(vars[cte_start + t], 2);
-      // fg[0] += CppAD::pow(vars[epsi_start + t], 2);
-      // fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
-      fg[0] += 3000*CppAD::pow(vars[cte_start + t], 2);
+      fg[0] += 5000*CppAD::pow(vars[cte_start + t], 2);
       fg[0] += 3000*CppAD::pow(vars[epsi_start + t], 2);
       fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
     }
 
     // Minimize the use of actuators.
     for (int t = 0; t < N - 1; t++){
-      // fg[0] += CppAD::pow(vars[delta_start + t], 2);
-      // fg[0] += 20 * CppAD::pow(vars[a_start + t], 2);
       fg[0] += 5*CppAD::pow(vars[delta_start + t], 2);
       fg[0] += 5*CppAD::pow(vars[a_start + t], 2);
-      // try adding penalty for speed + steer
-      fg[0] += 700*CppAD::pow(vars[delta_start + t] * vars[v_start + t], 2);
+      // fg[0] += 700*CppAD::pow(vars[delta_start + t] * vars[v_start + t], 2);
     }
 
     // Minimize the value gap between sequential actuatotions.
     for (int t = 0; t < N -2; t++){
-      // fg[0] += CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
-      // fg[0] += CppAD::pow(vars[a_start + t +1] - vars[a_start + t], 2);
-      fg[0] += 200*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += 500*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       fg[0] += 10*CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
     //
@@ -271,14 +263,13 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // {...} is shorthand for creating a vector, so auto x1 = {1.0,2.0}
   // creates a 2 element double vector.
 
-  // vector<double> result;
+  vector<double> result;
 
-  // result.push_back(solution.x[delta_start]);
-  // result.push_back(solution.x[a_start]);
-  // for (int i = 0; i < N-1; i++) {
-  //   result.push_back(solution.x[x_start + i + 1]);
-  //   result.push_back(solution.x[y_start + i + 1]);
-  // }
-  // return result;
-  return {solution.x[delta_start], solution.x[a_start]};
+  result.push_back(solution.x[delta_start]);
+  result.push_back(solution.x[a_start]);
+  for (int i = 1; i < N; i++){
+    result_var.push_back(solution.x[x_start + i]);
+    result_var.push_back(solution.x[y_start + i]);
+  }
+  return result;
 }
