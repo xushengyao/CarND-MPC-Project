@@ -19,7 +19,7 @@ double dt = 0.05;
 // presented in the classroom matched the previous radius.
 //
 // This is the length from front to CoG that has a similar radius.
-double ref_v = 30;
+double ref_v = 70;
 const double Lf = 2.67;
 size_t x_start = 0;
 size_t y_start = x_start + N;
@@ -109,9 +109,10 @@ class FG_eval {
       // Only consider the actuation at time t.
       AD<double> delta0 = vars[delta_start + t - 1];
       AD<double> a0 = vars[a_start + t - 1];
-      AD<double> f0 = coeffs[0] + coeffs[1] * x0;
-      AD<double> psides0 = CppAD::atan(coeffs[1]);
-
+      // AD<double> f0 = coeffs[0] + coeffs[1] * x0;
+      // AD<double> psides0 = CppAD::atan(coeffs[1]);
+      AD<double> f0 = coeffs[0] + coeffs[1] * x0 + coeffs[2] * CppAD::pow(x0, 2) + coeffs[3] * CppAD::pow(x0, 3);
+      AD<double> psides0 = CppAD::atan(coeffs[1] + 2 * coeffs[2] * x0 + 3 * coeffs[3] * CppAD::pow(x0, 2));
       // Here's `x` to get you started.
       // The idea here is to constraint this value to be 0.
       //
