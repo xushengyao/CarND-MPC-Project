@@ -280,5 +280,5 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   //   result.push_back(solution.x[y_start + i + 1]);
   // }
   // return result;
-  return {solution.x[delta_start], solution.x[a_start]}
+  return {solution.x[delta_start], solution.x[a_start]}；
 }
