@@ -107,8 +107,6 @@ int main() {
             waypoints_y.push_back((ptsx[i] - px) * sin(-psi) + (ptsy[i] - py) * cos(-psi));
           }
 
-          double* ptrx = &waypoints_x[0];
-          double* ptry = &waypoints_y[0];
           Eigen::Map<Eigen::VectorXd> ptsx_fit(&waypoints_x[0], waypoints_x.size());
           Eigen::Map<Eigen::VectorXd> ptsy_fit(&waypoints_y[0], waypoints_y.size());
 

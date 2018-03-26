@@ -2,6 +2,47 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## Rubric Points
+
+### The Model
+
+The code for the kinematic model is shown below:
+```
+fg[1 + x_start + t] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
+fg[1 + y_start + t] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
+fg[1 + psi_start + t] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
+fg[1 + v_start + t] = v1 - (v0 + a0 * dt);
+fg[1 + cte_start + t] = cte1 - ((y0 - f0) + (v0 * CppAD::sin(epsi0) * dt));
+fg[1 + epsi_start + t] =  epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
+```
+
+##### State Variables:
+
+* x: the x position of the car.
+* y: the y position of the car.
+* psi: the heading direction of the car.
+* v:  the velocity of the car.
+* cte: the cross-track error.
+* epsi: the orientation error.
+
+##### Control Variables:
+* delta: the steering angle.
+* a: the change of the speed.
+
+Here, Lf is the distance between the center of mass of the vehicle and the front wheels and affects the maneuverability.
+
+
+### Timestep Length and Elapsed Duration (N & dt)
+* N = 10
+* dt = 0.1
+Since the latency is given as 100ms (0.1s), I set ```dt = 0.1``` in  order to simplify the MPC implementation. For the timestep length *N*, it is always a, initially I tried 20 and 30, and found out the car is easy to oscillate. After that, I decided to use a smaller value and the car is able to handle the track without any issues.
+
+### Polynomial Fitting and MPC Preprocessing
+Waypoints are converted to the vehicle coordinate, and a 3rd degree polynomials is used to fit to waypoints:
+
+
+### Model Predictive Control with Latency
+
 
 ## Dependencies
 
