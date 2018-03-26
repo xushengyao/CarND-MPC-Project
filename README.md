@@ -35,15 +35,36 @@ Here, Lf is the distance between the center of mass of the vehicle and the front
 ### Timestep Length and Elapsed Duration (N & dt)
 * N = 10
 * dt = 0.1
-Since the latency is given as 100ms (0.1s), I set ```dt = 0.1``` in  order to simplify the MPC implementation. For the timestep length *N*, it is always a, initially I tried 20 and 30, and found out the car is easy to oscillate. After that, I decided to use a smaller value and the car is able to handle the track without any issues.
+Since the latency is given as 100ms (0.1s), I set ```dt = 0.1``` in order to simplify the MPC implementation. For the timestep length *N*, it is always a, initially I tried 20 and 30, and the car was easy to oscillate. After that, I decided to use a smaller value and the car is able to handle the track without any issues.
 
 ### Polynomial Fitting and MPC Preprocessing
-Waypoints are converted to the vehicle coordinate, and a 3rd degree polynomials is used to fit to waypoints:
+To simplify the updating process, the waypoints are converted to the vehicle space, and a 3rd degree polynomials is used to fit waypoints:
+```
+for (int i = 0; i < ptsx.size(); i++) {
+  waypoints_x.push_back((ptsx[i] - px) * cos(-psi) - (ptsy[i] - py) * sin(-psi));
+  waypoints_y.push_back((ptsx[i] - px) * sin(-psi) + (ptsy[i] - py) * cos(-psi));
+}
+
+Eigen::Map<Eigen::VectorXd> ptsx_fit(&waypoints_x[0], waypoints_x.size());
+Eigen::Map<Eigen::VectorXd> ptsy_fit(&waypoints_y[0], waypoints_y.size());
+
+auto coeffs = polyfit(ptsx_fit, ptsy_fit, 3);
+double cte = polyeval(coeffs, 0);
+double epsi = -atan(coeffs[1]);
+```
 
 
 ### Model Predictive Control with Latency
-
-
+Since I already set the timestep duration to be equal to the latency delay time, it is easy to handle the latency in MPC. As shown below, after the initial time, the actuators will always use the value from one more timestep ahead, which is exactly the latency delay time.
+```
+AD<double> delta0 = vars[delta_start + t - 1];
+AD<double> a0 = vars[a_start + t - 1];
+// latency
+if (t > 1) {
+  a0 = vars[a_start + t - 2];
+  delta0 = vars[delta_start + t - 2];
+}
+```
 ## Dependencies
 
 * cmake >= 3.5
