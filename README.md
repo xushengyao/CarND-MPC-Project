@@ -35,6 +35,7 @@ Here, Lf is the distance between the center of mass of the vehicle and the front
 ### Timestep Length and Elapsed Duration (N & dt)
 * N = 10
 * dt = 0.1
+
 Since the latency is given as 100ms (0.1s), I set ```dt = 0.1``` in order to simplify the MPC implementation. For the timestep length *N*, it is always a, initially I tried 20 and 30, and the car was easy to oscillate. After that, I decided to use a smaller value and the car is able to handle the track without any issues.
 
 ### Polynomial Fitting and MPC Preprocessing
