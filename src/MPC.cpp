@@ -49,7 +49,7 @@ class FG_eval {
     for (unsigned int t = 0; t < N; t++) {
       fg[0] += 125*CppAD::pow(vars[cte_start + t], 2);
       fg[0] += 30000*CppAD::pow(vars[epsi_start + t], 2);
-      fg[0] += 7*CppAD::pow(vars[v_start + t] - ref_v, 2);
+      fg[0] += 8*CppAD::pow(vars[v_start + t] - ref_v, 2);
     }
 
     // Minimize the use of actuators.
@@ -62,7 +62,7 @@ class FG_eval {
 
     // Minimize the value gap between sequential actuatotions.
     for (unsigned int t = 0; t < N -2; t++){
-      fg[0] += 8000*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
+      fg[0] += 10000*CppAD::pow(vars[delta_start + t + 1] - vars[delta_start + t], 2);
       fg[0] += 100*CppAD::pow(vars[a_start + t + 1] - vars[a_start + t], 2);
     }
 
