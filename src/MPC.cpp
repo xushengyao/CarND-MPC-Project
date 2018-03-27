@@ -19,7 +19,7 @@ double dt = 0.1;
 // presented in the classroom matched the previous radius.
 //
 // This is the length from front to CoG that has a similar radius.
-double ref_v = 35.7632; //80*0.44704
+double ref_v = 80*0.44704
 const double Lf = 2.67;
 size_t x_start = 0;
 size_t y_start = x_start + N;
@@ -47,8 +47,8 @@ class FG_eval {
 
     // The part of the cost based on the reference state.
     for (unsigned int t = 0; t < N; t++) {
-      fg[0] += 600*CppAD::pow(vars[cte_start + t], 2);
-      fg[0] += 2000*CppAD::pow(vars[epsi_start + t], 2);
+      fg[0] += 20*CppAD::pow(vars[cte_start + t], 2);
+      fg[0] += 1000*CppAD::pow(vars[epsi_start + t], 2);
       fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
     }
 
