@@ -19,7 +19,7 @@ double dt = 0.1;
 // presented in the classroom matched the previous radius.
 //
 // This is the length from front to CoG that has a similar radius.
-double ref_v = 70*0.44704;
+double ref_v = 80*0.44704;
 const double Lf = 2.67;
 size_t x_start = 0;
 size_t y_start = x_start + N;
@@ -49,7 +49,7 @@ class FG_eval {
     for (unsigned int t = 0; t < N; t++) {
       fg[0] += 1000*CppAD::pow(vars[cte_start + t], 2);
       fg[0] += 30000*CppAD::pow(vars[epsi_start + t], 2);
-      fg[0] += CppAD::pow(vars[v_start + t] - ref_v, 2);
+      fg[0] += 15*CppAD::pow(vars[v_start + t] - ref_v, 2);
     }
 
     // Minimize the use of actuators.
