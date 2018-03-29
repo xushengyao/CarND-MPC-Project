@@ -19,7 +19,7 @@ double dt = 0.1;
 // presented in the classroom matched the previous radius.
 //
 // This is the length from front to CoG that has a similar radius.
-double ref_v = 80*0.44704; // unit conversion
+double ref_v = 40*0.44704; // unit conversion
 const double Lf = 2.67;
 size_t x_start = 0;
 size_t y_start = x_start + N;
